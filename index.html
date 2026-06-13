@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Poisoning in Toddlers (1–3 Years) | Common Poisons · Management · Nursing Care</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .transition-all { transition: all 0.3s ease; }
+        .recall-mode .reveal-text {
+            background-color: #cbd5e1 !important;
+            color: transparent !important;
+            border-radius: 0.375rem !important;
+            padding: 0 0.25rem !important;
+            cursor: pointer !important;
+            transition: background-color 0.2s, color 0.2s !important;
+            box-shadow: inset 0 0 0 1px #94a3b8 !important;
+            display: inline-block !important;
+        }
+        .recall-mode .reveal-text:hover,
+        .recall-mode .reveal-text.revealed {
+            background-color: #fef08a !important;
+            color: #1e293b !important;
+            box-shadow: none !important;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #be185d; border-radius: 8px; }
+        .content-section { animation: fade 0.3s ease; }
+        @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .quiz-feedback-correct { background-color: #dcfce7; border-left: 4px solid #22c55e; }
+        .quiz-feedback-wrong { background-color: #fee2e2; border-left: 4px solid #ef4444; }
+        .locked-section { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
+        .flashcard { background: #fff; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer; border: 1px solid #e2e8f0; }
+        .flashcard:hover { transform: translateY(-5px); }
+        .analogy-box { background: #fce7f3; border-left: 8px solid #be185d; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { poison: { light: '#fce7f3', DEFAULT: '#be185d', dark: '#831843' } } } }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col md:flex-row font-sans text-slate-800 overflow-hidden">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-poison-dark text-white p-4 flex justify-between items-container shadow-md z-30 shrink-0">
+        <button onclick="toggleMobileMenu()" class="text-white focus:outline-none z-40">
+            <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+        <h1 class="font-bold text-lg absolute left-1/2 transform -translate-x-1/2 pointer-events-none">
+            <i class="fa-solid fa-skull-crossbones mr-2"></i> Toddler Poisoning
+        </h1>
+        <div class="w-8"></div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="hidden md:flex flex-col w-full md:w-80 bg-white shadow-2xl h-full absolute md:relative z-30 transition-transform duration-300 shrink-0 border-r border-slate-200">
+        <div class="p-6 bg-gradient-to-br from-poison-dark to-poison text-white hidden md:block shrink-0">
+            <h1 class="font-black text-2xl tracking-wide"><i class="fa-solid fa-skull-crossbones mr-2"></i> Poisoning in Toddlers</h1>
+            <p class="text-sm text-pink-200 mt-1 font-medium">Accidental Ingestions · Emergency Management · Nursing Care</p>
+        </div>
+        <div class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1 text-sm font-medium">
+                <li><button onclick="showSection('home')" id="btn-home" class="nav-btn w-full text-left px-6 py-3 bg-poison-light text-poison-dark border-r-4 border-poison-dark transition-colors"><i class="fa-solid fa-house w-6 nav-icon"></i><i class="fa-solid fa-lock w-6 hidden"></i> Home / Start</button></li>
+                <li><button onclick="showSection('simple')" id="btn-simple" class="nav-btn w-full text-left px-6 py-3 text-slate-700 hover:bg-slate-50 transition-colors locked-section"><i class="fa-solid fa-face-smile w-6 nav-icon hidden"></i><i class="fa-solid fa-lock w-6 text-slate-400"></i> Toddler Poisoning Like You're 5</button></li>
+                <li><button onclick="showSection('definition')" id="btn-definition" class="nav-btn w-full text-left px-6 py-3 text-slate-700 hover:bg-slate-50 transition-colors locked-section"><i class="fa-solid fa-book-open w-6 nav-icon hidden"></i><i class="fa-solid fa-lock w-6 text-slate-400"></i> Definition & Epidemiology</button></li>
+                <li><button onclick="showSection('common')" id="btn-common" class="nav-btn w-full text-left px-6 py-3 text-slate-700 hover:bg-slate-50 transition-colors locked-section"><i class="fa-solid fa-flask w-6 nav-icon hidden"></i><i class="fa-solid fa-lock w-6 text-slate-400"></i> Common Poisons in Toddlers</button></li>
+                <li><button onclick="showSection('pathophysiology')" id="btn-pathophysiology" class="nav-btn w-full text-left px-6 py-3 text-slate-700 hover:bg-slate-50 transition-colors locked-section"><i class="fa-solid fa-chart-line w-6 nav-icon hidden"></i><i class="fa-solid fa-lock w-6 text-slate-400"></i> Pathophysiology & Toxidromes</button></li>
+                <li><button onclick="showSection('clinical')" id="btn-clinical" class="nav-btn w-full text-left px-6 py-3 text-slate-700 hover:bg-slate-50 transition-colors locked-section"><i class="fa-solid fa-stethoscope w-6 nav-icon hidden"></i><i class="fa-solid fa-lock w-6 text-slate-400"></i> Clinical Features & Assessment</button></li>
+                <li><button onclick="showSection('management')" id="btn-management" class="nav-btn w-full text-left px-6 py-3 text-slate-700 hover:bg-slate-50 transition-colors locked-section"><i class="fa-solid fa-hand-holding-medical w-6 nav-icon hidden"></i><i class="fa-solid fa-lock w-6 text-slate-400"></i> Management & Antidotes</button></li>
+                <li><button onclick="showSection('nursing')" id="btn-nursing" class="nav-btn w-full text-left px-6 py-3 text-slate-700 hover:bg-slate-50 transition-colors locked-section"><i class="fa-solid fa-user-nurse w-6 nav-icon hidden"></i><i class="fa-solid fa-lock w-6 text-slate-400"></i> Nursing Care & Prevention</button></li>
+                <li><button onclick="showSection('flashcards')" id="btn-flashcards" class="nav-btn w-full text-left px-6 py-3 text-slate-700 hover:bg-slate-50 transition-colors border-t border-slate-200 mt-2 locked-section"><i class="fa-solid fa-cards w-6 text-poison nav-icon hidden"></i><i class="fa-solid fa-lock w-6 text-slate-400"></i> Flashcards & Mnemonics</button></li>
+                <li><button onclick="showSection('final_quiz_sec')" id="btn-final_quiz_sec" class="nav-btn w-full text-left px-6 py-3 text-slate-700 hover:bg-slate-50 transition-colors locked-section"><i class="fa-solid fa-graduation-cap w-6 text-amber-500 nav-icon hidden"></i><i class="fa-solid fa-lock w-6 text-slate-400"></i> Final 50‑Item Exam</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="flex-1 h-full overflow-y-auto bg-slate-100 relative w-full">
+        <div class="fixed top-16 md:top-4 right-4 md:right-8 z-40 flex items-center bg-white/90 backdrop-blur px-4 py-3 rounded-full shadow-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleRecallMode()">
+            <span class="mr-3 text-sm font-bold text-slate-700 hidden md:inline"><i class="fa-solid fa-brain text-poison mr-1"></i> Active Recall</span>
+            <button id="recall-toggle" class="w-12 h-6 bg-slate-300 rounded-full relative transition-colors duration-300 focus:outline-none shadow-inner pointer-events-none">
+                <div id="recall-knob" class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform duration-300 shadow"></div>
+            </button>
+        </div>
+
+        <div class="p-4 md:p-8 max-w-6xl mx-auto pb-32">
+            <!-- HOME SECTION -->
+            <section id="home" class="content-section flex flex-col items-center justify-center min-h-[80vh] text-center block">
+                <div class="bg-gradient-to-br from-slate-800 to-poison-dark text-white rounded-3xl shadow-2xl p-10 md:p-16 w-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mt-10 -mr-10 text-white opacity-5 pointer-events-none"><i class="fa-solid fa-skull-crossbones text-[20rem]"></i></div>
+                    <div class="relative z-10">
+                        <div class="bg-white/10 backdrop-blur-sm inline-block p-4 rounded-full text-pink-300 mb-6 shadow-sm border border-white/20">
+                            <i class="fa-solid fa-hand-holding-heart text-5xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-300 mb-2 uppercase tracking-widest">Maternal & Child Health Nursing</h3>
+                        <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight drop-shadow-md">Poisoning in Toddlers<br>Ages 1–3 Years</h1>
+                        <div class="bg-white/10 backdrop-blur inline-block px-6 py-3 rounded-full mb-10 border border-white/20">
+                            <p class="text-lg text-white font-medium">"Accidental poisoning is one of the leading causes of injury in children under 5 years old – most cases happen at home." – Pillitteri</p>
+                        </div>
+                        <button onclick="unlockFirstSection()" class="bg-slate-600 hover:bg-slate-500 text-white font-black py-4 px-10 rounded-full shadow-xl transition-transform hover:scale-105 text-lg flex items-center mx-auto focus:outline-none">
+                            Start Learning <i class="fa-solid fa-arrow-right ml-3"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- "Toddler Poisoning Like You're 5" -->
+            <section id="simple" class="content-section hidden">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 border-b-2 border-poison pb-3"><i class="fa-solid fa-face-smile text-poison mr-4"></i> Toddler Poisoning Like You Are 5 Years Old</h2>
+                    <div class="analogy-box">
+                        <p class="text-lg font-bold">🧸 Imagine you have a little brother or sister who just learned to walk and climb.</p>
+                        <p>• Little kids are like scientists – they put <strong class="text-pink-700">everything in their mouths</strong> to explore!<br>
+                        • Sometimes, they find colorful pills (like candy) or shiny bottles under the sink.<br>
+                        • If they eat or drink something harmful, it can make them sick – like a bad tummy ache, sleepiness, or trouble breathing.</p>
+                        <p class="mt-3">🩺 But don't worry! Doctors and nurses know special ways to help – like giving medicine to stop the poison or using a special black powder (activated charcoal) to soak it up.</p>
+                        <p class="text-sm text-slate-600 mt-2">✅ Best of all, grown‑ups can prevent almost all poisonings by putting dangerous things in a high locked cabinet.</p>
+                    </div>
+                    <div class="bg-pink-50 p-5 rounded-xl text-center mt-4">
+                        <i class="fa-solid fa-skull-crossbones text-6xl text-poison"></i>
+                        <p class="font-bold mt-2">Why toddlers are most at risk</p>
+                        <div class="flex justify-center gap-4 mt-2 text-sm">
+                            <div><span class="inline-block w-4 h-4 bg-pink-500 rounded-full"></span> High curiosity</div>
+                            <div><span class="inline-block w-4 h-4 bg-pink-500 rounded-full"></span> Short stature – reaches counters</div>
+                            <div><span class="inline-block w-4 h-4 bg-pink-500 rounded-full"></span> Puts hands in mouth constantly</div>
+                        </div>
+                        <svg width="180" height="120" viewBox="0 0 180 120" class="mx-auto mt-3">
+                            <circle cx="90" cy="60" r="30" fill="#fce7f3" stroke="#be185d" stroke-width="2"/>
+                            <text x="90" y="55" text-anchor="middle" font-size="10" fill="#831843">Toddler</text>
+                            <text x="90" y="70" text-anchor="middle" font-size="8" fill="#831843">⬇️ puts in mouth</text>
+                            <text x="90" y="85" text-anchor="middle" font-size="10" fill="#be185d">⬇️ poison</text>
+                            <rect x="70" y="95" width="40" height="8" fill="#fef08a" stroke="#b45309" stroke-width="1"/>
+                            <text x="90" y="103" text-anchor="middle" font-size="6" fill="#b45309">parent near?</text>
+                        </svg>
+                    </div>
+                    <button onclick="openQuiz('simple')" class="mt-6 w-full bg-slate-800 text-white font-black py-3 rounded-xl">Take Quiz → Unlock Next</button>
+                </div>
+            </section>
+
+            <!-- Definition & Epidemiology -->
+            <section id="definition" class="content-section hidden">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 border-b-2 border-poison pb-3"><i class="fa-solid fa-book-open text-poison mr-4"></i> Definition & Epidemiology</h2>
+                    <p><strong>Toddler poisoning</strong> refers to accidental exposure to a potentially harmful substance (ingestion, inhalation, skin contact, or eye contact) in a child aged 1–3 years. It is a major cause of pediatric injury and is almost entirely preventable.</p>
+                    <div class="grid md:grid-cols-2 gap-5 mt-4">
+                        <div class="bg-slate-50 p-4 rounded-xl"><strong>📊 Global Statistics</strong><br><span class="reveal-text">• Children aged 1–3 years are the most likely age group to be poisoned.<br>• Peak incidence of pediatric poisonings occurs in toddlers age 1 to 3 years, as does the peak incidence for hospitalization.<br>• Non‑fatal poisoning is more common in the age group 1 to 4 years old.</span><br><span class="text-xs">(Source: BMJ Best Practice, WHO EMRO)</span></div>
+                        <div class="bg-slate-50 p-4 rounded-xl"><strong>🇵🇭 Philippines</strong><br><span class="reveal-text">• Poisoning is one of the leading causes of injury among children below 18 years of age.<br>• Most pediatric admissions for poisoning were below 5 years old, occurring at home and accidental in nature.<br>• In Metro Manila, poisonings accounted for 0.17% of pediatric admissions (3 hospitals, 1996‑2000).</span><br><span class="text-xs">(Source: Philippine National Injury Survey, DOH AO 2006‑0016; HERDIN)</span></div>
+                    </div>
+                    <canvas id="poisonChart" width="400" height="200" style="max-width:100%; margin-top:1rem;"></canvas>
+                    <div class="bg-pink-50 p-3 rounded-lg mt-4"><strong>⚠️ Key point:</strong> <span class="reveal-text">Most poisonings occur in the child's own home, often when a parent or caregiver is nearby but distracted. Poisoning in children is almost entirely preventable with appropriate safety measures.</span></div>
+                    <button onclick="openQuiz('definition')" class="mt-6 w-full bg-slate-800 text-white font-black py-3 rounded-xl">Take Quiz → Unlock Next</button>
+                </div>
+            </section>
+
+            <!-- Common Poisons -->
+            <section id="common" class="content-section hidden">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 border-b-2 border-poison pb-3"><i class="fa-solid fa-flask text-poison mr-4"></i> Common Poisons in Toddlers</h2>
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div class="bg-red-50 p-4 rounded-xl"><strong>💊 Medications (most common – about half of all toxic exposures)</strong><br><span class="reveal-text">• Paracetamol (acetaminophen)<br>• Ibuprofen<br>• Multivitamins (iron containing most dangerous)<br>• Oral contraceptives<br>• Antiepileptic drugs<br>• Cough and cold preparations</span></div>
+                        <div class="bg-blue-50 p-4 rounded-xl"><strong>🧴 Household products</strong><br><span class="reveal-text">• Cleaning agents (bleach, toilet bowl cleaners)<br>• Dishwashing liquid / laundry detergent pods<br>• Pesticides<br>• Hydrocarbons (gasoline, kerosene, lamp oil)<br>• Button batteries (burns in 2 hours)<br>• Lead (paint chips, soil, imported toys)</span></div>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-lg mt-4"><strong>📌 Highly toxic in small amounts:</strong> <span class="reveal-text">Paracetamol (toxic dose >150 mg/kg), opioids (e.g., methadone), calcium channel blockers, clonidine, sulfonylureas, camphor, and hydrocarbon fuels.</span></div>
+                    <button onclick="openQuiz('common')" class="mt-6 w-full bg-slate-800 text-white font-black py-3 rounded-xl">Take Quiz → Unlock Next</button>
+                </div>
+            </section>
+
+            <!-- Pathophysiology & Toxidromes -->
+            <section id="pathophysiology" class="content-section hidden">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 border-b-2 border-poison pb-3"><i class="fa-solid fa-chart-line text-poison mr-4"></i> Pathophysiology & Toxidromes</h2>
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div><strong>🔬 General Mechanisms</strong><br><span class="reveal-text">• Absorption: enteral (most common), inhalation, dermal<br>• Distribution: protein binding, lipid solubility<br>• Metabolism: liver (cytochrome P450 system)<br>• Excretion: kidneys (urinary pH manipulation)<br>• End‑organ toxicity: hepatotoxic (paracetamol), nephrotoxic, neurotoxic (lead)</span></div>
+                        <div><strong>🧩 Common Toxidromes (predictable symptom clusters)</strong><br><span class="reveal-text">• Cholinergic (organophosphates): SLUDGE (salivation, lacrimation, urination, defecation, GI upset, emesis)<br>• Anticholinergic: “hot as a hare, blind as a bat, dry as a bone, red as a beet, mad as a hatter”<br>• Sympathomimetic: tachycardia, hypertension, hyperthermia, agitation<br>• Opioid: miosis, respiratory depression, coma</span></div>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg mt-4"><strong>🔑 Nursing pearl:</strong> <span class="reveal-text">Toxidromes help identify the likely poison before laboratory confirmation.</span></div>
+                    <button onclick="openQuiz('pathophysiology')" class="mt-6 w-full bg-slate-800 text-white font-black py-3 rounded-xl">Take Quiz → Unlock Next</button>
+                </div>
+            </section>
+
+            <!-- Clinical Features & Assessment -->
+            <section id="clinical" class="content-section hidden">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 border-b-2 border-poison pb-3"><i class="fa-solid fa-stethoscope text-poison mr-4"></i> Clinical Features & Assessment</h2>
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div><strong>👶 Cardinal signs</strong><br><span class="reveal-text">• Witnessed ingestion or child found with empty container<br>• Sudden change in behaviour (drowsiness, irritability, seizures)<br>• Gastrointestinal symptoms: vomiting, abdominal pain, diarrhoea<br>• Respiratory: tachypnoea, bradypnoea, stridor, apnea<br>• Burns around mouth (caustics)<br>• Odor on breath (gasoline, alcohol)</span></div>
+                        <div><strong>🩺 Diagnostic approach</strong><br><span class="reveal-text">• ABCDE assessment (airway, breathing, circulation, disability, exposure)<br>• Fingerprick glucose (exclude hypoglycaemia)<br>• Serum paracetamol and salicylate levels (first‑line toxicology)<br>• Electrocardiogram (tricyclics, calcium channel blockers)<br>• Chest/abdominal X‑ray (opaque tablets, button batteries)</span></div>
+                    </div>
+                    <div class="bg-amber-50 p-3 rounded-lg mt-4"><strong>📌 Red flags (call poison centre immediately):</strong> <span class="reveal-text">Altered mental status, seizures, respiratory depression, arrhythmias, refractory shock, or ingestion of a highly toxic substance (e.g., opioids, calcium channel blockers, camphor).</span></div>
+                    <button onclick="openQuiz('clinical')" class="mt-6 w-full bg-slate-800 text-white font-black py-3 rounded-xl">Take Quiz → Unlock Next</button>
+                </div>
+            </section>
+
+            <!-- Management & Antidotes -->
+            <section id="management" class="content-section hidden">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 border-b-2 border-poison pb-3"><i class="fa-solid fa-hand-holding-medical text-poison mr-4"></i> Management & Antidotes</h2>
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div><strong>⚕️ General principles (ABC + Decontamination)</strong><br><span class="reveal-text">• Stabilise airway, breathing, circulation (ABCs).<br>• Remove from source; decontaminate skin/eyes with copious water.<br>• Activated charcoal (oral/NG) – within 1 hour of ingestion; dose 1 g/kg (max 50‑60 g). Ineffective for hydrocarbons, caustics, alcohols, heavy metals.<br>• Gastric lavage rarely indicated; contraindicated in caustic/hydrocarbon ingestion.<br>• Enhanced elimination: multiple‑dose activated charcoal (MDAC), urinary alkalisation (bicarbonate for salicylates), haemodialysis for severe methanol/ethylene glycol toxicity.</span></div>
+                        <div><strong>💊 Specific antidotes</strong><br><span class="reveal-text">• Paracetamol → N‑acetylcysteine (NAC)<br>• Opioids → Naloxone (0.4‑2 mg IV titrated)<br>• Organophosphates → Atropine + Pralidoxime (PAM)<br>• Benzodiazepines → Flumazenil (avoid in chronic use)<br>• Methanol / Ethylene glycol → Ethanol or Fomepizole<br>• Beta‑blockers / Calcium channel blockers → Glucagon (0.15 mg/kg)<br>• Isoniazid → Pyridoxine (75 mg/kg)</span></div>
+                    </div>
+                    <div class="bg-rose-50 p-3 rounded-lg mt-4"><strong>📞 Pillitteri advice:</strong> <span class="reveal-text">“Never present medication as candy. Buy medications with childproof caps; put away immediately after use.”</span></div>
+                    <button onclick="openQuiz('management')" class="mt-6 w-full bg-slate-800 text-white font-black py-3 rounded-xl">Take Quiz → Unlock Next</button>
+                </div>
+            </section>
+
+            <!-- Nursing Care & Prevention -->
+            <section id="nursing" class="content-section hidden">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 border-b-2 border-poison pb-3"><i class="fa-solid fa-user-nurse text-poison mr-4"></i> Nursing Care & Prevention</h2>
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div><strong>👩‍⚕️ Nursing interventions</strong><br><span class="reveal-text">• Secure airway, administer oxygen, establish IV access.<br>• Obtain history (what, when, how much, interventions done).<br>• Call poison control centre (US: 1‑800‑222‑1222).<br>• Administer activated charcoal if indicated (protect airway).<br>• Monitor vital signs, pulse oximetry, cardiac rhythm.<br>• Provide emotional support to family.</span></div>
+                        <div><strong>🛡️ Primary prevention (parent teaching)</strong><br><span class="reveal-text">• Store all medicines and household chemicals in locked cabinets, out of sight and reach (preferably ≥1.5 m high).<br>• Use child‑resistant caps; never refer to medicine as “candy”.<br>• Keep products in original containers; never use food containers for chemicals.<br>• Remove button batteries and small magnets from reach.<br>• Install carbon monoxide detectors.<br>• Role‑play “always ask first” before touching anything.</span></div>
+                    </div>
+                    <div class="bg-teal-50 p-3 rounded-lg mt-4"><strong>📌 Pillitteri prevention mnemonic “S.A.F.E.”</strong> – Store locked, Avoid transferring containers, Focus (never leave child alone with medications), Educate children about poisons.</div>
+                    <button onclick="openQuiz('nursing')" class="mt-6 w-full bg-slate-800 text-white font-black py-3 rounded-xl">Take Quiz → Unlock Next</button>
+                </div>
+            </section>
+
+            <!-- Flashcards & Mnemonics -->
+            <section id="flashcards" class="content-section hidden">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-3xl font-black text-slate-800 mb-4 border-b-2 border-poison pb-3"><i class="fa-solid fa-cards text-poison mr-4"></i> Flashcards & Mnemonics</h2>
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div class="flashcard p-4" onclick="toggleFlash(this)"><div class="font-bold text-poison">Q: Most common poison in toddlers?</div><div class="flash-answer hidden mt-2">Paracetamol (acetaminophen) – accounts for ~18% of calls to poison centres.</div></div>
+                        <div class="flashcard p-4" onclick="toggleFlash(this)"><div class="font-bold text-poison">Q: Antidote for paracetamol overdose</div><div class="flash-answer hidden mt-2">N‑acetylcysteine (NAC)</div></div>
+                        <div class="flashcard p-4" onclick="toggleFlash(this)"><div class="font-bold text-poison">Q: Antidote for opioid poisoning</div><div class="flash-answer hidden mt-2">Naloxone (0.4‑2 mg IV titrated to effect)</div></div>
+                        <div class="flashcard p-4" onclick="toggleFlash(this)"><div class="font-bold text-poison">Q: When is activated charcoal contraindicated?</div><div class="flash-answer hidden mt-2">Ingestion of hydrocarbons, caustics, alcohols, heavy metals</div></div>
+                        <div class="flashcard p-4" onclick="toggleFlash(this)"><div class="font-bold text-poison">Q: Cholinergic toxidrome treatment</div><div class="flash-answer hidden mt-2">Atropine + pralidoxime (organophosphates)</div></div>
+                        <div class="flashcard p-4" onclick="toggleFlash(this)"><div class="font-bold text-poison">Q: Button battery ingestion action</div><div class="flash-answer hidden mt-2">Emergency! Can cause esophageal burns in 2 hours – immediate X‑ray and removal.</div></div>
+                    </div>
+                    <div class="mt-6 bg-pink-50 p-4 rounded-xl"><strong>🧠 Mnemonics</strong><br><span class="reveal-text">“S.L.U.D.G.E.” – Salivation, Lacrimation, Urination, Defecation, GI upset, Emesis (cholinergic).<br>“H.A.R.D.A.H.” – Hot, Agitated, Restless, Delirium, Atropine, Hypertension (anticholinergic).<br>“S.A.F.E.” – Storage locked, Avoid transfer, Focus, Educate (prevention).<br>“C.A.R.E.” – Call poison centre, Assess ABC, Remove from source, Evaluate for antidote.</span></div>
+                    <button onclick="openQuiz('flashcards')" class="mt-6 w-full bg-slate-800 text-white font-black py-3 rounded-xl">Take Quiz → Unlock Final Exam</button>
+                </div>
+            </section>
+
+            <!-- FINAL EXAM SECTION -->
+            <section id="final_quiz_sec" class="content-section hidden">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 text-center min-h-[60vh] flex flex-col justify-center items-center">
+                    <i class="fa-solid fa-graduation-cap text-8xl text-amber-500 mb-6"></i>
+                    <h2 class="text-4xl font-black text-slate-800 mb-4">Final 50‑Item Exam: Toddler Poisoning</h2>
+                    <p class="text-lg text-slate-600 mb-8 max-w-2xl">Covers definition, epidemiology, common poisons, pathophysiology, clinical features, management, antidotes, nursing care, prevention, and mnemonics. Score ≥75% to pass.</p>
+                    <button onclick="openQuiz('final_quiz')" class="w-full max-w-md bg-slate-800 text-white font-black py-4 rounded-xl shadow-md text-xl">Start Final Exam</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- QUIZ MODAL -->
+    <div id="quiz-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
+        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-6 md:p-8 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeQuiz()" class="absolute top-4 right-4 text-slate-400 hover:text-red-500"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            <h2 id="quiz-title" class="text-3xl font-black text-slate-800 mb-2"></h2>
+            <div id="quiz-questions-container" class="space-y-4 mt-4"></div>
+            <button id="quiz-submit-btn" onclick="submitQuiz()" class="mt-8 w-full bg-poison text-white font-bold py-4 rounded-xl shadow-lg">Submit Answers</button>
+            <div id="quiz-result-container" class="hidden mt-6 p-4 rounded-xl bg-slate-100"></div>
+        </div>
+    </div>
+
+    <script>
+        // QUIZ DATA (10 questions each for sections)
+        const quizzes = {
+            simple: { title: "Toddler Poisoning Like You're 5", next: "definition", questions: [
+                { q: "Why do toddlers put dangerous things in their mouths?", options: ["They are naughty","They are exploring the world","They are hungry","They are thirsty"], ans: 1 },
+                { q: "What special black powder can soak up a poison in the stomach?", options: ["Baking soda","Activated charcoal","Sugar","Salt"], ans: 1 },
+                { q: "Where do most poisonings happen?", options: ["At school","At home","At the park","At the hospital"], ans: 1 },
+                { q: "What is the best way to keep poisons away from toddlers?", options: ["Hide them on a low shelf","Lock them in a high cabinet","Leave them on the counter","Give them to the child to see"], ans: 1 },
+                { q: "If a child swallows a button battery, what should you do?", options: ["Wait to see if they get sick","Go to the emergency room immediately","Give them milk","Make them vomit"], ans: 1 }
+            ] },
+            definition: { title: "Definition & Epidemiology", next: "common", questions: [
+                { q: "Which age group has the highest incidence of accidental poisoning?", options: ["Neonates (0‑28 days)","Infants (<1 year)","Toddlers (1‑3 years)","School‑age children (6‑12 years)"], ans: 2 },
+                { q: "In the Philippines, poisoning is one of the leading causes of injury among children under:", options: ["5 years","10 years","15 years","18 years"], ans: 3 },
+                { q: "Most childhood poisonings occur at:", options: ["School","Home","Daycare","Grandparents' house"], ans: 1 },
+                { q: "According to the Philippine National Injury Survey, poisoning accounts for injuries among children below:", options: ["5 years","12 years","18 years","21 years"], ans: 2 },
+                { q: "What percentage of poison centre calls relate to children under 5 years old (New Zealand data, similar to global trends)?", options: ["20‑25%","40‑45%","60‑65%","80‑85%"], ans: 2 }
+            ] },
+            common: { title: "Common Poisons in Toddlers", next: "pathophysiology", questions: [
+                { q: "The single most common substance involved in paediatric poisonings is:", options: ["Bleach","Paracetamol (acetaminophen)","Iron pills","Button batteries"], ans: 1 },
+                { q: "Which household product can cause severe burns to the oesophagus if swallowed and should never be induced to vomit?", options: ["Dish soap","Bleach (caustic)","Vitamins","Toothpaste"], ans: 1 },
+                { q: "A button battery can cause a serious burn in as little as:", options: ["30 minutes","2 hours","8 hours","24 hours"], ans: 1 },
+                { q: "Which of the following is NOT a common poison in toddlers?", options: ["Laundry detergent pods","Multivitamins","Whole grains","Cough and cold preparations"], ans: 2 },
+                { q: "Lead poisoning in children most commonly comes from:", options: ["Water only","Chipping paint in old homes, soil, and imported toys","Food","Air"], ans: 1 }
+            ] },
+            pathophysiology: { title: "Pathophysiology & Toxidromes", next: "clinical", questions: [
+                { q: "The mnemonic 'SLUDGE' is used to remember symptoms of which toxidrome?", options: ["Anticholinergic","Cholinergic (organophosphate)","Opioid","Sympathomimetic"], ans: 1 },
+                { q: "Which toxidrome presents with 'hot as a hare, blind as a bat, dry as a bone, red as a beet, mad as a hatter'?", options: ["Cholinergic","Anticholinergic","Opioid","Sedative‑hypnotic"], ans: 1 },
+                { q: "The classic triad of opioid poisoning is:", options: ["Miosis, respiratory depression, coma","Mydriasis, tachycardia, seizures","Diarrhoea, vomiting, dehydration","Fever, rash, joint pain"], ans: 0 },
+                { q: "Which organ is most commonly involved in paracetamol toxicity?", options: ["Kidney","Liver","Brain","Lungs"], ans: 1 },
+                { q: "Iron poisoning is particularly dangerous because it causes:", options: ["Metabolic acidosis and liver failure","Bradycardia","Hypotension only","Seizures"], ans: 0 }
+            ] },
+            clinical: { title: "Clinical Features & Assessment", next: "management", questions: [
+                { q: "The first priority in managing a poisoned child is:", options: ["Induce vomiting","Administer activated charcoal","Assess airway, breathing, circulation (ABCs)","Call poison control centre"], ans: 2 },
+                { q: "Which of the following is a red flag requiring urgent hospital referral?", options: ["Vomiting once","Altered mental status or seizures","Mild abdominal pain","Low‑grade fever"], ans: 1 },
+                { q: "A child presents with pinpoint pupils, respiratory depression, and coma. Which poison is most likely?", options: ["Paracetamol","Opioid","Organophosphate","Lead"], ans: 1 },
+                { q: "Which laboratory test should be obtained in any child with suspected toxic ingestion?", options: ["Complete blood count","Serum paracetamol and salicylate levels","Lipid profile","C‑reactive protein"], ans: 1 },
+                { q: "Burns around the mouth and lips suggest ingestion of:", options: ["Hydrocarbons","Caustic substances (acid or alkali)","Iron tablets","Vitamins"], ans: 1 }
+            ] },
+            management: { title: "Management & Antidotes", next: "nursing", questions: [
+                { q: "Activated charcoal is most effective when given within how many hours of ingestion?", options: ["30 minutes","1 hour","4 hours","6 hours"], ans: 1 },
+                { q: "Activated charcoal is NOT effective for which of the following?", options: ["Paracetamol","Hydrocarbons (gasoline, kerosene)","Opioids","Tricyclic antidepressants"], ans: 1 },
+                { q: "The antidote for paracetamol overdose is:", options: ["Naloxone","N‑acetylcysteine (NAC)","Flumazenil","Atropine"], ans: 1 },
+                { q: "The antidote for opioid poisoning is:", options: ["Naloxone","N‑acetylcysteine","Flumazenil","Atropine"], ans: 0 },
+                { q: "Organophosphate poisoning is treated with:", options: ["Naloxone and NAC","Atropine and pralidoxime (PAM)","Flumazenil","Activated charcoal only"], ans: 1 }
+            ] },
+            nursing: { title: "Nursing Care & Prevention", next: "flashcards", questions: [
+                { q: "A parent calls after their 2‑year‑old swallowed an unknown number of pills. What should the nurse advise first?", options: ["Make the child vomit","Call poison control centre","Give milk","Wait for symptoms"], ans: 1 },
+                { q: "Which is an important poisoning prevention measure for parents?", options: ["Keep medications in a low cabinet for easy access","Store chemicals in food containers","Lock medicines in a high cabinet","Use child‑proof caps but leave bottles on counter"], ans: 2 },
+                { q: "What should a parent do if a child gets a chemical in the eye?", options: ["Call poison centre, flush with water for 15‑20 minutes","Rub the eye","Apply eye ointment","Wait for redness"], ans: 0 },
+                { q: "The mnemonic 'S.A.F.E.' for prevention includes: Store locked, Avoid transfer, Focus, and:", options: ["Educate","Evacuate","Examine","Exercise"], ans: 0 },
+                { q: "A toddler has just swallowed a button battery. What is the most appropriate action?", options: ["Give honey","Induce vomiting","Go to the emergency room immediately","Observe at home"], ans: 2 }
+            ] },
+            flashcards: { title: "Flashcards & Mnemonics", next: "final_quiz_sec", questions: [
+                { q: "Most common cause of paediatric poisoning calls", options: ["Bleach","Paracetamol","Lead","Pesticides"], ans: 1 },
+                { q: "Antidote for paracetamol", options: ["Naloxone","N‑acetylcysteine","Atropine","Flumazenil"], ans: 1 },
+                { q: "Antidote for opioids", options: ["Naloxone","N‑acetylcysteine","Atropine","Pralidoxime"], ans: 0 },
+                { q: "Mnemonic for cholinergic toxidrome", options: ["SLUDGE","HARD","CARE","SAFE"], ans: 0 },
+                { q: "Contraindication to activated charcoal", options: ["Paracetamol","Hydrocarbons","Opioids","Tricyclics"], ans: 1 }
+            ] }
+        };
+        // Build final 50-item exam
+        let finalQ = [];
+        for(let sec of ['simple','definition','common','pathophysiology','clinical','management','nursing','flashcards']) {
+            if(quizzes[sec]) finalQ.push(...quizzes[sec].questions.slice(0,6));
+        }
+        while(finalQ.length < 50) finalQ.push({ q: "The most important prevention strategy for childhood poisoning is:", options: ["Keep all poisons locked out of sight and reach","Teach children to read labels","Use emetics at home","Wash hands frequently"], ans: 0 });
+        quizzes.final_quiz = { title: "Final 50-Item Exam: Poisoning in Toddlers", next: null, questions: finalQ };
+
+        let unlockedSections = ['home'];
+        let poisonChart = null;
+
+        function initCharts() {
+            const ctx = document.getElementById('poisonChart')?.getContext('2d');
+            if(ctx && !poisonChart) {
+                poisonChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Paracetamol', 'Household cleaners', 'Vitamins', 'Pesticides', 'Button batteries'],
+                        datasets: [{ label: 'Proportion of paediatric poisoning calls (%)', data: [18, 15, 12, 8, 5], backgroundColor: '#be185d', borderRadius: 6 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
+                });
+            }
+        }
+
+        function toggleFlash(el) { const ans = el.querySelector('.flash-answer'); if(ans) ans.classList.toggle('hidden'); }
+        function unlockFirstSection() { if(!unlockedSections.includes('simple')) { unlockedSections.push('simple'); updateSidebarUI(); } showSection('simple'); }
+        function showSection(sectionId) {
+            if (!unlockedSections.includes(sectionId) && sectionId !== 'home') { alert("Complete the Active Recall Quiz at the bottom of the previous section to unlock."); return; }
+            document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(sectionId)?.classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('bg-poison-light','text-poison-dark','border-r-4','border-poison-dark'));
+            const activeBtn = document.getElementById('btn-'+sectionId);
+            if(activeBtn) activeBtn.classList.add('bg-poison-light','text-poison-dark','border-r-4','border-poison-dark');
+            if(window.innerWidth < 768) document.getElementById('sidebar').classList.add('hidden');
+            if(sectionId === 'definition' && !poisonChart) setTimeout(initCharts, 50);
+        }
+        function updateSidebarUI() {
+            const sections = ['home','simple','definition','common','pathophysiology','clinical','management','nursing','flashcards','final_quiz_sec'];
+            sections.forEach(sec => {
+                const btn = document.getElementById('btn-'+sec);
+                if(!btn) return;
+                const lock = btn.querySelector('.fa-lock'), icon = btn.querySelector('.nav-icon');
+                if(unlockedSections.includes(sec) || sec==='home') { btn.classList.remove('locked-section'); if(lock) lock.classList.add('hidden'); if(icon) icon.classList.remove('hidden'); }
+                else { btn.classList.add('locked-section'); if(lock) lock.classList.remove('hidden'); if(icon) icon.classList.add('hidden'); }
+            });
+        }
+        let currentQuiz=null;
+        function openQuiz(sectionId) { currentQuiz = sectionId; const qd = quizzes[sectionId]; if(!qd) return; document.getElementById('quiz-title').innerHTML = qd.title; const container = document.getElementById('quiz-questions-container'); container.innerHTML = ''; qd.questions.forEach((q, idx) => { let html = `<div class="bg-slate-50 p-4 rounded-xl mb-4"><p class="font-bold mb-3">${idx+1}. ${q.q}</p><div class="space-y-2">`; q.options.forEach((opt,oi) => { html += `<label class="flex items-center space-x-3 p-2 rounded-lg hover:bg-white cursor-pointer"><input type="radio" name="q${idx}" value="${oi}" class="form-radio text-poison"><span>${opt}</span></label>`; }); html += `</div><div class="feedback-${idx} text-sm mt-2 hidden"></div></div>`; container.innerHTML += html; }); document.getElementById('quiz-submit-btn').classList.remove('hidden'); document.getElementById('quiz-result-container').classList.add('hidden'); document.getElementById('quiz-modal').classList.remove('hidden'); }
+        function closeQuiz() { document.getElementById('quiz-modal').classList.add('hidden'); }
+        function submitQuiz() {
+            const qd = quizzes[currentQuiz];
+            if(!qd) return;
+            let score = 0;
+            for(let i=0; i<qd.questions.length; i++) {
+                const sel = document.querySelector(`input[name="q${i}"]:checked`);
+                if(sel && parseInt(sel.value)===qd.questions[i].ans) score++;
+                const fbDiv = document.querySelector(`.feedback-${i}`);
+                if(fbDiv){
+                    fbDiv.classList.remove('hidden');
+                    const correctTxt = qd.questions[i].options[qd.questions[i].ans];
+                    if(sel && parseInt(sel.value)===qd.questions[i].ans) { fbDiv.innerHTML='<span class="text-green-700">✓ Correct</span>'; fbDiv.parentElement?.classList.add('quiz-feedback-correct'); }
+                    else { const selectedTxt = sel? qd.questions[i].options[parseInt(sel.value)]:"No answer"; fbDiv.innerHTML=`<span class="text-red-700">✗ Incorrect. Correct: ${correctTxt}. You answered: ${selectedTxt}</span>`; fbDiv.parentElement?.classList.add('quiz-feedback-wrong'); }
+                }
+            }
+            let percent = (score/qd.questions.length)*100;
+            let resultDiv = document.getElementById('quiz-result-container');
+            document.getElementById('quiz-submit-btn').classList.add('hidden');
+            resultDiv.classList.remove('hidden');
+            if(percent>=75){
+                if(currentQuiz==='final_quiz'){ resultDiv.innerHTML=`<div class="text-green-600 text-4xl text-center">🎉 Excellent! Score ${score}/${qd.questions.length} (${percent}%)<br>You mastered Toddler Poisoning!</div><button onclick="closeQuiz()" class="mt-4 bg-poison text-white px-6 py-2 rounded-xl">Close</button>`; return; }
+                if(quizzes[currentQuiz].next && !unlockedSections.includes(quizzes[currentQuiz].next)) unlockedSections.push(quizzes[currentQuiz].next);
+                if(quizzes[currentQuiz].next === 'flashcards' && !unlockedSections.includes('final_quiz_sec')) unlockedSections.push('final_quiz_sec');
+                updateSidebarUI();
+                resultDiv.innerHTML=`<div class="text-green-600 text-3xl text-center">✅ Passed! (${score}/${qd.questions.length})</div><button onclick="closeQuiz(); showSection('${quizzes[currentQuiz].next}')" class="mt-4 bg-green-600 text-white px-6 py-2 rounded-xl">Unlock Next Section</button>`;
+            } else { resultDiv.innerHTML=`<div class="text-red-600 text-3xl text-center">❌ Failed: ${score}/${qd.questions.length} (${percent}%)<br>Need 75%</div><button onclick="openQuiz('${currentQuiz}')" class="mt-4 bg-slate-600 text-white px-6 py-2 rounded-xl">Try Again</button>`; }
+        }
+        function toggleRecallMode() { const active = !document.body.classList.contains('recall-mode'); const toggle=document.getElementById('recall-toggle'),knob=document.getElementById('recall-knob'); if(active){ document.body.classList.add('recall-mode'); toggle.classList.add('bg-poison-dark'); knob.classList.add('translate-x-6'); } else { document.body.classList.remove('recall-mode'); toggle.classList.remove('bg-poison-dark'); knob.classList.remove('translate-x-6'); } }
+        function toggleMobileMenu() { const s=document.getElementById('sidebar'); if(s.classList.contains('hidden')) s.classList.remove('hidden','flex','absolute','h-full','z-50'); else s.classList.add('hidden'); }
+        document.addEventListener('DOMContentLoaded', () => { updateSidebarUI(); document.querySelectorAll('.reveal-text').forEach(el => el.addEventListener('click', function(){ if(document.body.classList.contains('recall-mode')) this.classList.toggle('revealed'); })); });
+    </script>
+</body>
+</html>
